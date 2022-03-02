@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './Card.css'
-
+/*
 const products = [
     { id: '123a', name: 'Salmon', price: 90.05 },
     { id: '123b', name: 'Wheat bread', price: 8.05 },
@@ -12,15 +12,22 @@ const products = [
     { id: '123h', name: 'Flour', price: 12.55 },
     { id: '123i', name: 'Orange', price: 4.55 },
     { id: '123j', name: 'Apple', price: 5.55 },
-];
+];*/
 const Cart = () => {
     const [shoppingCart, setShoppingCart] = useState([]);
 
-    useEffect(() => {
+    const fetchProducts = async () => {
+        const url = "https://621f84f5ce99a7de193f919b.mockapi.io/api/products";
+        const data = await fetch(url);
+        const products = await data.json();
+        return products
+    }
+    const loadCart = async () => {
         // load local storage
         //use it else build cart from default (all products)
         let shoppingCart = [];
         const strData = localStorage.getItem("shoppingCart");
+        const products = await fetchProducts();
         if (strData) {
             shoppingCart = JSON.parse(strData);
         } else {
@@ -29,6 +36,10 @@ const Cart = () => {
             }
         }
         setShoppingCart(shoppingCart);
+    }
+
+    useEffect(() => {
+        loadCart();
 
     }, [])
 
