@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Navbar, Container, Button, ButtonGroup, Card } from 'react-bootstrap';
+import { Navbar, Container, Button, ButtonGroup, Card, Popover, OverlayTrigger } from 'react-bootstrap';
 import './Card.css'
 
 const Cart = () => {
@@ -84,7 +84,7 @@ const Cart = () => {
             }
         }
         if (count < 4 && count > 0) {
-            return 1;
+            return 4;
         }
         return Math.floor(count / 4);
     }
@@ -93,6 +93,29 @@ const Cart = () => {
             <Navbar bg="light">
                 <Container>
                     <Navbar.Brand href="#home">Shopping</Navbar.Brand>
+                        <OverlayTrigger
+                            trigger="click"
+                            placement='bottom'                           
+                            overlay={
+                                <Popover id='popover-bottom'>
+                                    <Popover.Header as="h3">your cart:</Popover.Header>
+                                    <Popover.Body>
+                                    <p>total price: {shoppingCarItem()*0.5} </p>
+                                    {
+
+                                        shoppingCart.filter(item => item.quantity > 0).map(item => (
+                                            <div key={item.product.id}>
+                                                <p>{item.product.name}: {item.quantity} units, {item.totalPrice} $</p>
+                                            </div>
+                                        ))
+                                    }
+                                    <strong>total payment: {shoppingCartPrice()}</strong>
+                                    </Popover.Body>
+                                </Popover>
+                            }
+                        >
+                            <Button variant="light"><img src='shopping-cart.png' style={{ width: "30px" }} /></Button>
+                        </OverlayTrigger>
                 </Container>
             </Navbar>
             <div>
@@ -115,7 +138,6 @@ const Cart = () => {
                                     </p>
                                     <ButtonGroup size="sm">
                                         <Button onClick={() => increment(item.product.id)}>+</Button>
-                                        {/* <Button>Middle</Button> */}
                                         <Button onClick={() => decrement(item.product.id)}>-</Button>
                                     </ButtonGroup>
                                 </Card.Body>
@@ -123,27 +145,6 @@ const Cart = () => {
                         ))
 
                     }
-                </div>
-                <div><Container>
-                    <Navbar expand="lg" variant="light" bg="light">
-                        <Container>
-                            <Navbar.Brand> <h3>total shipping: {2 * shoppingCarItem()}</h3>
-                                <h4>total price: {shoppingCartPrice()}$</h4>
-                                <div>
-                                    <p>your cart:</p>
-                                    {
-
-                                        shoppingCart.filter(item => item.quantity > 0).map(item => (
-                                            <div key={item.product.id}>
-                                                <p>{item.product.name} {item.quantity} {item.totalPrice} $</p>
-                                            </div>
-                                        ))
-                                    }
-                                </div></Navbar.Brand>
-                        </Container>
-                    </Navbar>
-                </Container>
-
                 </div>
             </div>
         </div>
